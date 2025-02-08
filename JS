@@ -1,9 +1,0 @@
-function performSearch() {
-    const searchQuery = document.getElementById("search-bar").value;
-    if (searchQuery) {
-        const url = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-        window.location.href = url;  // Redirecting to Google search with the query
-    } else {
-        alert("Please enter a search term.");
-    }
-}
