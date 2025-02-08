@@ -18,3 +18,63 @@
     <script src="script.js"></script>
 </body>
 </html>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+.search-box {
+    margin-top: -80px;
+}
+
+#search-bar {
+    padding: 10px;
+    width: 500px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#search-bar:focus {
+    border-color: #4285f4;
+}
+
+button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #4285f4;
+    color: white;function performSearch() {
+    const searchQuery = document.getElementById("search-bar").value;
+    if (searchQuery) {
+        const url = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+        window.location.href = url;  // Redirecting to Google search with the query
+    } else {
+        alert("Please enter a search term.");
+    }
+}
+
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #357ae8;
+}
