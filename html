@@ -1,83 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Search Engine</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+import sys
+from PyQt5.QtCore import QUrl
+from PyQt5.QtWidgets import QApplication, QMainWindow, QToolBar, QAction, QLineEdit
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
-        .container {
-            text-align: center;
-        }
+class SimpleBrowser(QMainWindow):
+    def __init__(self):
+        super(SimpleBrowser, self).__init__()
+        self.setWindowTitle('QuickBrowse')
+        self.setGeometry(100, 100, 1200, 800)
 
-        .search-box {
-            margin-top: -80px;
-        }
+        self.browser = QWebEngineView()
+        self.browser.setUrl(QUrl('https://www.google.com'))
+        self.setCentralWidget(self.browser)
 
-        #search-bar {
-            padding: 10px;
-            width: 500px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
+        # Navigation Bar
+        nav_bar = QToolBar()
+        self.addToolBar(nav_bar)
 
-        #search-bar:focus {
-            border-color: #4285f4;
-        }
+        back_btn = QAction('Back', self)
+        back_btn.triggered.connect(self.browser.back)
+        nav_bar.addAction(back_btn)
 
-        button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            font-size: 16px;
-            border: none;
-            background-color: #4285f4;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+        forward_btn = QAction('Forward', self)
+        forward_btn.triggered.connect(self.browser.forward)
+        nav_bar.addAction(forward_btn)
 
-        button:hover {
-            background-color: #357ae8;
-        }
-    </style>
-</head>
-<body>
+        reload_btn = QAction('Reload', self)
+        reload_btn.triggered.connect(self.browser.reload)
+        nav_bar.addAction(reload_btn)
 
-    <div class="container">
-        <div class="search-box">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <button onclick="performSearch()">Search</button>
-        </div>
-    </div>
+        home_btn = QAction('Home', self)
+        home_btn.triggered.connect(self.navigate_home)
+        nav_bar.addAction(home_btn)
 
-    <script>
-        function performSearch() {
-            const searchQuery = document.getElementById("search-bar").value;
-            if (searchQuery) {
-                const url = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-                window.location.href = url;  // Redirecting to Google search with the query
-            } else {
-                alert("Please enter a search term.");
-            }
-        }
-    </script>
+        # URL Bar
+        self.url_bar = QLineEdit()
+        self.url_bar.returnPressed.connect(self.navigate_to_url)
+        nav_bar.addWidget(self.url_bar)
 
-</body>
-</html>
+        self.browser.urlChanged.connect(self.update_url)
+
+    def navigate_home(self):
+        self.browser.setUrl(QUrl('https://www.google.com'))
+
+    def navigate_to_url(self):
+        url = self.url_bar.text()
+        if not url.startswith('http'):
+            url = 'http://' + url
+        self.browser.setUrl(QUrl(url))
+
+    def update_url(self, q):
+        self.url_bar.setText(q.toString())
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    QApplication.setApplicationName('QuickBrowse')
+    window = SimpleBrowser()
+    window.show()
+    sys.exit(app.exec_())
